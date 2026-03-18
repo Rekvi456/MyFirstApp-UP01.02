@@ -1,5 +1,15 @@
 <resources>
-    <string name="app_name">MyFirstApp</string>
-    <string name="main_text">My First Application</string>
-    <string name="student_info">Student: Kolgotin Group: 3.2ISIP-2</string>
-    </resources>
+    <string name="app_name">МоёПервоеПриложение</string>
+    <string name="main_text">Моё Первое Приложение</string>
+    <string name="student_info">Студент: Колготин Группа: 3.2ИСИП-2</string>
+    <string name="avatar_description">Аватар автора</string>
+    <string name="menu_description">Menu</string>
+    <string name="like_description">Нравится</string>
+    <string name="share_description">Поделиться</string>
+    <string name="views_description">Просмотры</string>
+    <string name="author">Автозапчасти. Универсальный магазин автозапчастей</string>
+    <string name="published">21 мая в 18:36</string>
+    <string name="content">Добро пожаловать в наш универсальный магазин автозапчастей! У нас широкий ассортимент оригинальных запчастей и аналогов для всех марок автомобилей. Мы предлагаем запчасти для двигателей, ходовой части, тормозной системы, электрооборудования и многое другое. Наши консультанты готовы помочь вам подобрать нужные детали и аксессуары для вашего автомобиля.</string>
+    <string name="link_title">Магазин автозапчастей: найдите всё необходимое здесь!</string>
+    <string name="link_url">avtozapchasti.ru</string>
+</resources>
