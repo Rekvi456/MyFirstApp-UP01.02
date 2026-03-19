@@ -124,7 +124,7 @@
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/like_description"
-            android:src="@drawable/ic_favorite_border"
+            android:src="@drawable/ic_like_border"
             app:tint="@color/purple_500" />
 
         <TextView
