@@ -1,69 +1,57 @@
 package ru.kolgotin.myfirstapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import ru.kolgotin.myfirstapp.databinding.ActivityMainBinding
 import ru.kolgotin.myfirstapp.dto.Post
-import ru.kolgotin.myfirstapp.util.formatCount
+import ru.kolgotin.myfirstapp.viewmodel.PostViewModel
 import java.text.DecimalFormat
+import ru.kolgotin.myfirstapp.util.formatCount
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var post: Post
+
+    // Делегирование создания ViewModel
+    private val viewModel: PostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("Activity: onCreate")
 
-        // 1. Создаем экземпляр Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        // 2. Устанавливаем корневой View как content view
         setContentView(binding.root)
 
-        // 3. Создаем тестовые данные
-        post = Post(
-            id = 1,
-            author = "Автозапчасти. Универсальный магазин автозапчастей",
-            content = "Добро пожаловать в наш универсальный магазин автозапчастей! У нас широкий ассортимент оригинальных запчастей и аналогов для всех марок автомобилей. Мы предлагаем запчасти для двигателей, ходовой части, тормозной системы, электрооборудования и многое другое. Наши консультанты готовы помочь вам подобрать нужные детали и аксессуары для вашего автомобиля.",
-            published = "21 мая в 18:36",
-            likedByMe = false,
-            likes = 999,
-            shares = 25,
-            views = 5700
-        )
+        // Подписываемся на изменения данных
+        viewModel.data.observe(this) { post ->
+            // Этот код будет выполняться каждый раз, когда данные изменяются
+            bindPost(post)
+        }
 
-        // 4. Отображаем данные на экране
-        bindPost(post)
-
-        // 5. Обработка кликов
         setupClickListeners()
     }
 
     private fun bindPost(post: Post) {
-        // Используем View Binding для доступа к View
         binding.apply {
             author.text = post.author
             published.text = post.published
             content.text = post.content
 
-            // Устанавливаем текст для счетчиков с форматированием
+            // Форматируем и отображаем счетчики
             likeCount.text = formatCount(post.likes)
             shareCount.text = formatCount(post.shares)
             viewsCount.text = formatCount(post.views)
 
-            // Устанавливаем правильную иконку лайка в зависимости от состояния
+            // Устанавливаем иконку лайка в зависимости от состояния
             if (post.likedByMe) {
                 like.setImageResource(R.drawable.ic_like_filled)
             } else {
                 like.setImageResource(R.drawable.ic_like_border)
             }
 
-            // Пример с ссылкой (заполняем, если есть)
+            // Пример с ссылкой
             linkTitle.text = "Магазин автозапчастей: найдите всё необходимое здесь!"
             linkUrl.text = "avtozapchasti.ru"
         }
@@ -71,51 +59,57 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.apply {
-            // Обработка лайка
+            // Обработка лайка - вызываем метод ViewModel
             like.setOnClickListener {
-                // Меняем состояние
-                post = post.copy(
-                    likedByMe = !post.likedByMe,
-                    likes = if (post.likedByMe) post.likes - 1 else post.likes + 1
-                )
-
-                // Обновляем отображение
-                bindPost(post)
-
-                // Показываем подсказку (для наглядности)
-                Toast.makeText(this@MainActivity,
-                    if (post.likedByMe) "Лайк поставлен" else "Лайк убран",
-                    Toast.LENGTH_SHORT).show()
+                viewModel.like()
+                Toast.makeText(this@MainActivity, "Лайк", Toast.LENGTH_SHORT).show()
             }
 
-            // Обработка репоста
+            // Обработка репоста - вызываем метод ViewModel
             share.setOnClickListener {
-                // Увеличиваем счетчик репостов на 1
-                post = post.copy(
-                    shares = post.shares + 1
-                )
-
-                // Обновляем отображение
-                bindPost(post)
-
+                viewModel.share()
                 Toast.makeText(this@MainActivity, "Репост +1", Toast.LENGTH_SHORT).show()
             }
 
-            // Обработка меню (просто показать сообщение)
             menu.setOnClickListener {
                 Toast.makeText(this@MainActivity, "Меню поста", Toast.LENGTH_SHORT).show()
             }
 
-            // Обработка аватарки
             avatar.setOnClickListener {
                 Toast.makeText(this@MainActivity, "Профиль автора", Toast.LENGTH_SHORT).show()
+                // Увеличиваем просмотры при клике на аватар (для примера)
+                viewModel.increaseViews()
             }
 
-            // Обработка всего корневого layout (для исследования)
+            // Для исследования поведения
             root.setOnClickListener {
                 println("CLICK: корневой layout")
                 Toast.makeText(this@MainActivity, "Клик по фону", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    override fun onStart() {
+        super.onStart()
+        println("Activity: onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("Activity: onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        println("Activity: onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("Activity: onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println("Activity: onDestroy")
     }
 }
