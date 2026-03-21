@@ -1,11 +1,15 @@
 package ru.kolgotin.myfirstapp
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import ru.kolgotin.myfirstapp.adapter.OnPostInteractionListener
 import ru.kolgotin.myfirstapp.adapter.PostsAdapter
 import ru.kolgotin.myfirstapp.databinding.ActivityMainBinding
+import ru.kolgotin.myfirstapp.dto.Post
 import ru.kolgotin.myfirstapp.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -13,31 +17,113 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: PostViewModel by viewModels()
 
+    // ID поста, который редактируется (0 = новый пост)
+    private var editingPostId: Long = 0L
+
+    private val interactionListener = object : OnPostInteractionListener {
+        override fun onLike(post: Post) {
+            viewModel.likeById(post.id)
+        }
+
+        override fun onShare(post: Post) {
+            viewModel.shareById(post.id)
+            Toast.makeText(this@MainActivity, "Репост +1", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onEdit(post: Post) {
+            // Сохраняем ID редактируемого поста
+            editingPostId = post.id
+            // Устанавливаем текст в поле ввода
+            binding.content.setText(post.content)
+            binding.content.setSelection(binding.content.text.length)
+            // Переводим фокус и показываем клавиатуру
+            binding.content.requestFocus()
+            showKeyboard(binding.content)
+            // Показываем панель отмены
+            binding.cancelGroup.visibility = View.VISIBLE
+        }
+
+        override fun onRemove(post: Post) {
+            viewModel.removeById(post.id)
+            Toast.makeText(this@MainActivity, "Пост удален", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onAvatarClick(post: Post) {
+            Toast.makeText(this@MainActivity, "Профиль: ${post.author}", Toast.LENGTH_SHORT).show()
+            viewModel.increaseViews(post.id)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Создаем адаптер с обработчиками
-        val adapter = PostsAdapter(
-            onLikeClickListener = { post ->
-                viewModel.likeById(post.id)
-                Toast.makeText(this, "Лайк поста ${post.id}", Toast.LENGTH_SHORT).show()
-            },
-            onShareClickListener = { post ->
-                viewModel.shareById(post.id)
-                Toast.makeText(this, "Репост поста ${post.id}", Toast.LENGTH_SHORT).show()
-            }
-        )
-
-        // Устанавливаем адаптер для RecyclerView
+        // Настройка адаптера
+        val adapter = PostsAdapter(interactionListener)
         binding.list.adapter = adapter
 
-        // Наблюдаем за изменениями данных
+        // Наблюдение за списком постов
         viewModel.data.observe(this) { posts ->
-            // submitList сам вызовет DiffUtil и обновит только изменившиеся элементы
             adapter.submitList(posts)
         }
+
+        // Отслеживание изменений текста от пользователя
+        binding.content.addTextChangedListener { text ->
+            // Обновляем ViewModel при изменении текста пользователем
+            viewModel.changeContent(text.toString())
+        }
+
+        // Кнопка сохранения
+        binding.save.setOnClickListener {
+            val text = binding.content.text.toString()
+            if (text.isBlank()) {
+                Toast.makeText(this, "Введите текст поста", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Если редактируем существующий пост
+            if (editingPostId != 0L) {
+                // Получаем текущий пост из ViewModel, обновляем его контент и сохраняем
+                viewModel.saveEditedPost(editingPostId, text)
+                editingPostId = 0L
+            } else {
+                // Создаем новый пост
+                viewModel.changeContent(text)
+                viewModel.save()
+            }
+
+            // Очищаем поле ввода
+            binding.content.text.clear()
+            // Скрываем панель отмены
+            binding.cancelGroup.visibility = View.GONE
+            // Скрываем клавиатуру
+            hideKeyboard(binding.content)
+        }
+
+        // Кнопка отмены редактирования
+        binding.cancel.setOnClickListener {
+            // Очищаем ID редактируемого поста
+            editingPostId = 0L
+            // Очищаем поле ввода
+            binding.content.text.clear()
+            // Скрываем панель отмены
+            binding.cancelGroup.visibility = View.GONE
+            // Скрываем клавиатуру
+            hideKeyboard(binding.content)
+            // Отменяем редактирование в ViewModel
+            viewModel.cancelEdit()
+        }
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun showKeyboard(view: View) {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
     }
 }

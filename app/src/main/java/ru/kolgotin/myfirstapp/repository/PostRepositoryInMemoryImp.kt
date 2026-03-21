@@ -3,8 +3,18 @@ package ru.kolgotin.myfirstapp.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.kolgotin.myfirstapp.dto.Post
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PostRepositoryInMemoryImpl : PostRepository {
+
+    // Счетчик для генерации ID
+    private var nextId = 5L
+
+    // Текущий пользователь (для демонстрации)
+    private val currentUserId = 1L
+    private val currentUserName = "Я"
 
     // Теперь это список, а не один пост
     private var posts = listOf(
@@ -109,7 +119,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             views=11200
         )
     )
-
     private val _data = MutableLiveData(posts)
 
     override fun getAll(): LiveData<List<Post>> = _data
@@ -148,5 +157,43 @@ class PostRepositoryInMemoryImpl : PostRepository {
             }
         }
         _data.value = posts
+    }
+
+    override fun save(post: Post) {
+        if (post.id == 0L) {
+            // Создание нового поста
+            val newPost = post.copy(
+                id = nextId++,
+                author = currentUserName,
+                authorId = currentUserId,
+                published = formatDate(Date()),
+                likedByMe = false,
+                likes = 0,
+                shares = 0,
+                views = 0
+            )
+            posts = listOf(newPost) + posts
+        } else {
+            // Обновление существующего поста
+            posts = posts.map { existingPost ->
+                if (existingPost.id == post.id) {
+                    // Сохраняем автора, дату и счетчики, обновляем только контент
+                    existingPost.copy(content = post.content)
+                } else {
+                    existingPost
+                }
+            }
+        }
+        _data.value = posts
+    }
+
+    override fun removeById(id: Long) {
+        posts = posts.filter { it.id != id }
+        _data.value = posts
+    }
+
+    private fun formatDate(date: Date): String {
+        val format = SimpleDateFormat("d MMM в HH:mm", Locale("ru"))
+        return format.format(date)
     }
 }

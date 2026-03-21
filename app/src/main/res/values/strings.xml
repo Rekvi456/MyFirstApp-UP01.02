@@ -1,15 +1,21 @@
 <resources>
-    <string name="app_name">МоёПервоеПриложение</string>
-    <string name="main_text">Моё Первое Приложение</string>
-    <string name="student_info">Студент: Колготин Группа: 3.2ИСИП-2</string>
-    <string name="avatar_description">Аватар автора</string>
-    <string name="menu_description">Menu</string>
-    <string name="like_description">Нравится</string>
-    <string name="share_description">Поделиться</string>
-    <string name="views_description">Просмотры</string>
-    <string name="author">Автозапчасти. Универсальный магазин автозапчастей</string>
-    <string name="published">21 мая в 18:36</string>
-    <string name="content">Добро пожаловать в наш универсальный магазин автозапчастей! У нас широкий ассортимент оригинальных запчастей и аналогов для всех марок автомобилей. Мы предлагаем запчасти для двигателей, ходовой части, тормозной системы, электрооборудования и многое другое. Наши консультанты готовы помочь вам подобрать нужные детали и аксессуары для вашего автомобиля.</string>
-    <string name="link_title">Магазин автозапчастей: найдите всё необходимое здесь!</string>
-    <string name="link_url">avtozapchasti.ru</string>
+    <string name="app_name">MyFirstApp</string>
+    <string name="avatar_description" translatable="false">Аватар автора</string>
+    <string name="menu_description" translatable="false">Menu</string>
+    <string name="like_description" translatable="false">Like</string>
+    <string name="share_description" translatable="false">Share</string>
+    <string name="views_description" translatable="false">Views</string>
+    <string name="author" translatable="false">Автозапчасти. Универсальный магазин автозапчастей</string>
+    <string name="published" translatable="false">21 мая в 18:36</string>
+    <string name="content" translatable="false">Добро пожаловать в наш универсальный магазин автозапчастей! У нас широкий ассортимент оригинальных запчастей и аналогов для всех марок автомобилей. Мы предлагаем запчасти для двигателей, ходовой части, тормозной системы, электрооборудования и многое другое. Наши консультанты готовы помочь вам подобрать нужные детали и аксессуары для вашего автомобиля.</string>
+    <string name="link_title" translatable="false">Магазин автозапчастей: найдите всё необходимое здесь!</string>
+    <string name="link_url" translatable="false">avtozapchasti.ru</string>
+    <string name="edit_post">Edit</string>
+    <string name="main_text">My First App</string>
+    <string name="student_info">Student: Kolgotin\nGroup: 3.2ISIP-2</string>
+    <string name="remove_post">Delete</string>
+    <string name="post_hint">What\'s new?</string>
+    <string name="save_post">Publish</string>
+    <string name="cancel_edit_hint">Editing...</string>
+    <string name="cancel_edit">Cancel</string>
 </resources>

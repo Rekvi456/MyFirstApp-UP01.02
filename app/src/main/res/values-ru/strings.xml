@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">МоёПервоеПриложение</string>
+    <string name="remove_post">Удалить</string>
+    <string name="main_text">Моё Первое Приложение</string>
+    <string name="student_info">Студент: Колготин\nГруппа: 3.2ИСИП-2</string>
+    <string name="edit_post">Редактировать</string>
+    <string name="post_hint">Что у вас нового?</string>
+    <string name="save_post">Опубликовать</string>
+    <string name="cancel_edit_hint">Редактирование...</string>
+    <string name="cancel_edit">Отменить</string>
+</resources>

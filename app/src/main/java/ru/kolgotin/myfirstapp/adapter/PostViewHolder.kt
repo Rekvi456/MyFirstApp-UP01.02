@@ -1,14 +1,16 @@
 package ru.kolgotin.myfirstapp.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import android.widget.PopupMenu
 import ru.kolgotin.myfirstapp.R
 import ru.kolgotin.myfirstapp.databinding.CardPostBinding
 import ru.kolgotin.myfirstapp.dto.Post
+import java.text.DecimalFormat
 
 class PostViewHolder(
     private val binding: CardPostBinding,
-    private val onLikeClickListener: (Post) -> Unit,
-    private val onShareClickListener: (Post) -> Unit
+    private val listener: OnPostInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(post: Post) {
@@ -17,43 +19,56 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
 
-            // Форматируем счетчики (можно вынести в отдельную функцию)
             likeCount.text = formatCount(post.likes)
             shareCount.text = formatCount(post.shares)
             viewsCount.text = formatCount(post.views)
 
             // Устанавливаем иконку лайка
-            if (post.likedByMe) {
-                like.setImageResource(R.drawable.ic_like_filled)
-            } else {
-                like.setImageResource(R.drawable.ic_like_border)
-            }
+            like.setImageResource(
+                if (post.likedByMe) R.drawable.ic_like_filled
+                else R.drawable.ic_like_border
+            )
 
             // Обработчики кликов
             like.setOnClickListener {
-                onLikeClickListener(post)
+                listener.onLike(post)
             }
 
             share.setOnClickListener {
-                onShareClickListener(post)
-            }
-
-            // Для исследования (можно оставить или убрать)
-            menu.setOnClickListener {
-                android.widget.Toast.makeText(
-                    itemView.context,
-                    "Меню поста ${post.id}",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
+                listener.onShare(post)
             }
 
             avatar.setOnClickListener {
-                android.widget.Toast.makeText(
-                    itemView.context,
-                    "Профиль автора ${post.author}",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
+                listener.onAvatarClick(post)
             }
+
+            // Кнопка меню с PopupMenu
+            menu.setOnClickListener { view ->
+                showPopupMenu(view, post)
+            }
+        }
+    }
+
+    private fun showPopupMenu(anchor: View, post: Post) {
+        PopupMenu(anchor.context, anchor).apply {
+            // Загружаем меню из ресурса
+            inflate(R.menu.post_menu)
+
+            // Обрабатываем выбор пунктов
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.edit -> {
+                        listener.onEdit(post)
+                        true
+                    }
+                    R.id.remove -> {
+                        listener.onRemove(post)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            show()
         }
     }
 
@@ -64,7 +79,7 @@ class PostViewHolder(
                 if (millions % 1.0 == 0.0) {
                     "${millions.toInt()}M"
                 } else {
-                    java.text.DecimalFormat(".").format(millions) + "M"
+                    DecimalFormat(".").format(millions) + "M"
                 }
             }
             count >= 10_000 -> "${count / 1000}K"
@@ -73,10 +88,11 @@ class PostViewHolder(
                 if (thousands % 1.0 == 0.0) {
                     "${thousands.toInt()}K"
                 } else {
-                    java.text.DecimalFormat(".").format(thousands) + "K"
+                    DecimalFormat(".").format(thousands) + "K"
                 }
             }
             else -> count.toString()
         }
     }
 }
+
