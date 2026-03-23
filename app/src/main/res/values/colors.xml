@@ -7,6 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red_500">#FF0000</color>
+    <color name="gray_600">#FF757575</color>
 
     <color name="background_light">#FFF3E0</color>  <!-- Светло-оранжевый фон -->
     <color name="text_primary">#FF6200EE</color>    <!-- Фиолетовый для заголовка -->

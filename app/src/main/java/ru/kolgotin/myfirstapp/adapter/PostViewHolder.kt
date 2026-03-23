@@ -19,15 +19,13 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
 
-            likeCount.text = formatCount(post.likes)
-            shareCount.text = formatCount(post.shares)
-            viewsCount.text = formatCount(post.views)
+            // Для кнопки лайка используем isChecked и текст
+            like.isChecked = post.likedByMe
+            like.text = formatCount(post.likes)
 
-            // Устанавливаем иконку лайка
-            like.setImageResource(
-                if (post.likedByMe) R.drawable.ic_like_filled
-                else R.drawable.ic_like_border
-            )
+            // Для репоста и просмотров - только текст
+            share.text = formatCount(post.shares)
+            views.text = formatCount(post.views)
 
             // Обработчики кликов
             like.setOnClickListener {
@@ -42,7 +40,6 @@ class PostViewHolder(
                 listener.onAvatarClick(post)
             }
 
-            // Кнопка меню с PopupMenu
             menu.setOnClickListener { view ->
                 showPopupMenu(view, post)
             }

@@ -31,15 +31,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onEdit(post: Post) {
-            // Сохраняем ID редактируемого поста
             editingPostId = post.id
-            // Устанавливаем текст в поле ввода
-            binding.content.setText(post.content)
-            binding.content.setSelection(binding.content.text.length)
-            // Переводим фокус и показываем клавиатуру
-            binding.content.requestFocus()
-            showKeyboard(binding.content)
-            // Показываем панель отмены
+            binding.contentEditText.setText(post.content)
+            // безопасный вызов для length и setSelection
+            binding.contentEditText.text?.let { editable ->
+                binding.contentEditText.setSelection(editable.length)
+            }
+            binding.contentEditText.requestFocus()
+            showKeyboard(binding.contentEditText)
             binding.cancelGroup.visibility = View.VISIBLE
         }
 
@@ -70,49 +69,36 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Отслеживание изменений текста от пользователя
-        binding.content.addTextChangedListener { text ->
-            // Обновляем ViewModel при изменении текста пользователем
+        binding.contentEditText.addTextChangedListener { text ->
             viewModel.changeContent(text.toString())
         }
 
+
         // Кнопка сохранения
         binding.save.setOnClickListener {
-            val text = binding.content.text.toString()
+            val text = binding.contentEditText.text?.toString() ?: ""  // безопасное получение текста
             if (text.isBlank()) {
                 Toast.makeText(this, "Введите текст поста", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Если редактируем существующий пост
             if (editingPostId != 0L) {
-                // Получаем текущий пост из ViewModel, обновляем его контент и сохраняем
                 viewModel.saveEditedPost(editingPostId, text)
                 editingPostId = 0L
             } else {
-                // Создаем новый пост
                 viewModel.changeContent(text)
                 viewModel.save()
             }
-
-            // Очищаем поле ввода
-            binding.content.text.clear()
-            // Скрываем панель отмены
+            // безопасная очистка
+            binding.contentEditText.text?.clear()
             binding.cancelGroup.visibility = View.GONE
-            // Скрываем клавиатуру
-            hideKeyboard(binding.content)
+            hideKeyboard(binding.contentEditText)
         }
-
-        // Кнопка отмены редактирования
         binding.cancel.setOnClickListener {
-            // Очищаем ID редактируемого поста
             editingPostId = 0L
-            // Очищаем поле ввода
-            binding.content.text.clear()
-            // Скрываем панель отмены
+            binding.contentEditText.text?.clear()
             binding.cancelGroup.visibility = View.GONE
-            // Скрываем клавиатуру
-            hideKeyboard(binding.content)
-            // Отменяем редактирование в ViewModel
+            hideKeyboard(binding.contentEditText)
             viewModel.cancelEdit()
         }
     }
