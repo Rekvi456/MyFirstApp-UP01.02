@@ -26,7 +26,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe = false,
             likes = 999,
             shares = 25,
-            views = 5700
+            views = 5700,
+            video = null
         ),
         Post(
             id=2,
@@ -36,7 +37,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=1245,
             shares=189,
-            views=8300
+            views=8300,
+            video = "https://rutube.ru/video/4636892a7d0e33249db80955af71071e"
         ),
         Post(
             id=3,
@@ -46,7 +48,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=true,
             likes=567,
             shares=45,
-            views=4120
+            views=4120,
+            video = null
         ),
         Post(
             id=4,
@@ -56,7 +59,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=2300,
             shares=310,
-            views=15400
+            views=15400,
+            video = null
         ),
         Post(
             id=5,
@@ -66,7 +70,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=3420,
             shares=890,
-            views=27800
+            views=27800,
+            video = null
         ),
         Post(
             id=6,
@@ -76,7 +81,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=true,
             likes=987,
             shares=156,
-            views=7100
+            views=7100,
+            video = null
         ),
         Post(
             id=7,
@@ -86,7 +92,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=876,
             shares=98,
-            views=5400
+            views=5400,
+            video = null
         ),
         Post(
             id=8,
@@ -96,7 +103,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=5210,
             shares=1240,
-            views=34600
+            views=34600,
+            video = null
         ),
         Post(
             id=9,
@@ -106,7 +114,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=true,
             likes=2140,
             shares=320,
-            views=16900
+            views=16900,
+            video = null
         ),
         Post(
             id=10,
@@ -116,7 +125,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likedByMe=false,
             likes=1567,
             shares=203,
-            views=11200
+            views=11200,
+            video = null
         )
     )
     private val _data = MutableLiveData(posts)

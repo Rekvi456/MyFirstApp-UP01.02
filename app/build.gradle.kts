@@ -41,14 +41,12 @@ android {
 }
 
 dependencies {
-    // Lifecycle и ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
-    // Для viewModels delegation
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

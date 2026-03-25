@@ -1,11 +1,13 @@
 package ru.kolgotin.myfirstapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import ru.kolgotin.myfirstapp.activity.EditPostContract
 import ru.kolgotin.myfirstapp.adapter.OnPostInteractionListener
 import ru.kolgotin.myfirstapp.adapter.PostsAdapter
 import ru.kolgotin.myfirstapp.databinding.ActivityMainBinding
@@ -26,20 +28,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onShare(post: Post) {
+            // Создаем Intent для отправки текста
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, post.content)
+                type = "text/plain"
+            }
+
+            // Создаем Chooser с заголовком
+            val chooserIntent = Intent.createChooser(shareIntent, getString(R.string.share_post_via))
+            startActivity(chooserIntent)
+
+            // Увеличиваем счетчик репостов
             viewModel.shareById(post.id)
-            Toast.makeText(this@MainActivity, "Репост +1", Toast.LENGTH_SHORT).show()
         }
 
         override fun onEdit(post: Post) {
-            editingPostId = post.id
-            binding.contentEditText.setText(post.content)
-            // безопасный вызов для length и setSelection
-            binding.contentEditText.text?.let { editable ->
-                binding.contentEditText.setSelection(editable.length)
-            }
-            binding.contentEditText.requestFocus()
-            showKeyboard(binding.contentEditText)
-            binding.cancelGroup.visibility = View.VISIBLE
+            editPostLauncher.launch(post.content)
         }
 
         override fun onRemove(post: Post) {
@@ -76,7 +81,8 @@ class MainActivity : AppCompatActivity() {
 
         // Кнопка сохранения
         binding.save.setOnClickListener {
-            val text = binding.contentEditText.text?.toString() ?: ""  // безопасное получение текста
+            val text =
+                binding.contentEditText.text?.toString() ?: ""  // безопасное получение текста
             if (text.isBlank()) {
                 Toast.makeText(this, "Введите текст поста", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -101,15 +107,30 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard(binding.contentEditText)
             viewModel.cancelEdit()
         }
+
+        binding.fab.setOnClickListener {
+            // Запускаем создание нового поста
+            editPostLauncher.launch(null)  // null означает создание нового
+        }
     }
 
     private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        val imm =
+            getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun showKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        val imm =
+            getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
         imm.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private val editPostLauncher = registerForActivityResult(EditPostContract()) { result ->
+        if (!result.isNullOrBlank()) {
+            // Получен текст отредактированного/нового поста
+            viewModel.changeContent(result)
+            viewModel.save()
+        }
     }
 }

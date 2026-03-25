@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@android:color/darker_gray"
+    android:backgroundTint="#1A000000"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/videoPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp"
+        android:src="@drawable/ic_video_preview" />
+
+    <ImageView
+        android:id="@+id/playIconPreview"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        android:contentDescription="@string/play_video"
+        android:src="@drawable/ic_play_icon_preview"
+        app:layout_constraintBottom_toBottomOf="@+id/videoPreview"
+        app:layout_constraintEnd_toEndOf="@+id/videoPreview"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="@+id/videoPreview"
+        app:layout_constraintTop_toTopOf="@+id/videoPreview"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/videoPreview"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/playIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/play_video"
+            android:src="@android:drawable/ic_media_play" />
+
+        <TextView
+            android:id="@+id/videoUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="YouTube video"
+            android:textColor="@color/purple_500"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/externalIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/open_external"
+            android:src="@android:drawable/ic_menu_view" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
