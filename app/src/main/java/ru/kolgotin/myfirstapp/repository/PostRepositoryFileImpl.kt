@@ -1,6 +1,7 @@
 package ru.kolgotin.myfirstapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
@@ -77,7 +78,8 @@ class PostRepositoryFileImpl(
         saveData()
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
+        Log.d("PostRepository", "Save called with id=${post.id}")
         posts = if (post.id == 0L) {
             // Создание нового поста
             val newPost = post.copy(
@@ -103,6 +105,7 @@ class PostRepositoryFileImpl(
         }
         _data.value = posts
         saveData()
+        return TODO("Provide the return value")
     }
 
     override fun removeById(id: Long) {

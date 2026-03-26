@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import ru.kolgotin.myfirstapp.R
 import ru.kolgotin.myfirstapp.databinding.FragmentNewPostBinding
 import ru.kolgotin.myfirstapp.viewmodel.PostViewModel
+import androidx.activity.addCallback
 
 class NewPostFragment : Fragment() {
 
@@ -54,6 +55,20 @@ class NewPostFragment : Fragment() {
             viewModel.changeContent(text)
             viewModel.save()
             findNavController().popBackStack()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val text = binding.edit.text.toString()
+            if (text.isNotBlank()) {
+                viewModel.saveDraft(text)
+            }
+            findNavController().popBackStack()
+        }
+
+        viewModel.draft.observe(viewLifecycleOwner) { draftText ->
+            if (draftText.isNotBlank()) {
+                binding.edit.setText(draftText)
+            }
         }
     }
 

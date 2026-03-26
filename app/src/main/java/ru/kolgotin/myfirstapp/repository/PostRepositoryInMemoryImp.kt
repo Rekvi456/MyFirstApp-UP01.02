@@ -169,7 +169,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         _data.value = posts
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
         if (post.id == 0L) {
             // Создание нового поста
             val newPost = post.copy(
@@ -195,6 +195,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             }
         }
         _data.value = posts
+        return TODO("Provide the return value")
     }
 
     override fun removeById(id: Long) {
