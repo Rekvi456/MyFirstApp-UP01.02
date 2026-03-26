@@ -8,4 +8,5 @@ interface OnPostInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onAvatarClick(post: Post) {}
+    fun onPostClick(post: Post) {}
 }

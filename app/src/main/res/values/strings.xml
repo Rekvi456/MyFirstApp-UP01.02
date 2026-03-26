@@ -29,4 +29,5 @@
     <string name="error_no_video_app">Video app not found</string>
     <string name="error_cannot_open_video">Cannot open video</string>
     <string name="share_post_via">Share via</string>
+    <string name="post_removed">Post Removed</string>
 </resources>
